@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMenu>
+#include <QLineEdit>
+
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +20,21 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    QMenu *m_pAnalysTypeMnu;
+    QLineEdit *m_lineEditRawDir;
+    QLineEdit *m_lineEditProcDir;
+    void CreateMenu();
+
+private slots:
+    void ClassAnParamWnd();
+    void RevTofAnParamWnd();
+    void Browse();
+    void Browse_2();
+    
+    void on_pushButton_4_clicked();
+    void on_pushButton_3_clicked();
+    
 };
 
 #endif // MAINWINDOW_H
