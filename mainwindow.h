@@ -18,6 +18,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+
 private:
     Ui::MainWindow *ui;
 
@@ -25,6 +26,12 @@ private:
     QLineEdit *m_lineEditRawDir;
     QLineEdit *m_lineEditProcDir;
     void CreateMenu();
+
+    void addThread();
+    void stopThreads();
+
+public slots:
+
 
 private slots:
     void ClassAnParamWnd();
@@ -34,6 +41,11 @@ private slots:
     
     void on_pushButton_4_clicked();
     void on_pushButton_3_clicked();
+
+    void setProcessStatus(int);
+
+signals:
+    void stopAll();
     
 };
 
