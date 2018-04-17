@@ -12,17 +12,18 @@ public:
     explicit QEpigraphDataProcessor(QObject *parent);
     QEpigraphDataProcessor( QString , QString);
 
-
+    void stop();    	/*  останавливает обработсика файлов */
     int GetNumberOfRawFiles(QString);
 
 public slots:
     void process(); 	/*  создает и запускает обработчика файлов */
-    void stop();    	/*  останавливает обработсика файлов */
+   // void stop();    	/*  останавливает обработсика файлов */
     void ProcessedOneRawFile();
 
 signals:
     void finished(); 	/* сигнал о завершении  работы обработчика файлов */
     void NumProcessedFiles(int);
+    void StopDataProcessor();//
 
 
 private:

@@ -19,7 +19,7 @@ void QEpigraphDataProcessor::process()
 {
     CProcessRawEpigraphData dataProcessor(this);
     connect(&dataProcessor,SIGNAL(ProcessedFile()),this,SLOT(ProcessedOneRawFile()));
-
+    connect(this,SIGNAL(StopDataProcessor()),&dataProcessor,SLOT(Stop()));
     //start process files in directory
     wchar_t buf[256] = {0};
     wchar_t buf2[256] = {0};
@@ -35,7 +35,7 @@ void QEpigraphDataProcessor::process()
 
 void QEpigraphDataProcessor::stop()
 {
-
+    emit StopDataProcessor();
 }
 
 int QEpigraphDataProcessor::GetNumberOfRawFiles(QString str)

@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->pushButton_2,SIGNAL(clicked(bool)),this,SLOT(Browse_2()));
     m_lineEditRawDir = ui->lineEdit;
     m_lineEditProcDir = ui->lineEdit_2;
+    m_btnProcess = ui->pushButton_3;
 
     CreateMenu();
 }
@@ -55,7 +56,19 @@ void MainWindow::on_pushButton_4_clicked()
 void MainWindow::on_pushButton_3_clicked()
 {
     // запустим поток для обработки данных
-   if(!m_lineEditRawDir->text().isEmpty()) addThread();
+    if(m_btnProcess->text() != "Stop")
+    {
+       if(!m_lineEditRawDir->text().isEmpty())
+       {
+           m_btnProcess->setText("Stop");
+           addThread();
+       }
+    }else
+    {
+        stopThreads();
+        m_btnProcess->setText("Process files");
+    }
+
 
 }
 // выберем директорию
@@ -97,25 +110,28 @@ void MainWindow::setProcessStatus(int num)
 
 void MainWindow::addThread()
 {
-    QEpigraphDataProcessor* dataProcessor = new QEpigraphDataProcessor(m_lineEditRawDir->text(),m_lineEditProcDir->text());
+    ui->progressBar->setMaximum(
+                GetNumOfRawFilesInDir(m_lineEditRawDir->text()));
+
+    m_DataProcessor = new QEpigraphDataProcessor(m_lineEditRawDir->text(),m_lineEditProcDir->text());
     QThread* thread = new QThread ;
-    dataProcessor->moveToThread(thread);
+    m_DataProcessor->moveToThread(thread);
 
     /*  Теперь внимательно следите за руками.  Раз: */
-        connect(thread, SIGNAL(started()), dataProcessor, SLOT(process()));
+        connect(thread, SIGNAL(started()), m_DataProcessor, SLOT(process()));
     /* … и при запуске потока будет вызван метод process(), который создаст построитель отчетов, который будет работать в новом потоке
 
     Два: */
-        connect(dataProcessor, SIGNAL(finished()), thread, SLOT(quit()));
+        connect(m_DataProcessor, SIGNAL(finished()), thread, SLOT(quit()));
     /* … и при завершении работы построителя отчетов, обертка построителя передаст потоку сигнал finished() , вызвав срабатывание слота quit()
 
     Три:
     */
-        connect(this, SIGNAL(stopAll()), dataProcessor, SLOT(stop()));
+       // connect(this, SIGNAL(stopAll()), m_DataProcessor, SLOT(stop()));
     /* … и Session может отправить сигнал о срочном завершении работы обертке построителя, а она уже остановит построитель и направит сигнал finished() потоку
 
     Четыре: */
-        connect(dataProcessor, SIGNAL(finished()),dataProcessor, SLOT(deleteLater()));
+        connect(m_DataProcessor, SIGNAL(finished()),m_DataProcessor, SLOT(deleteLater()));
     /* … и обертка пометит себя для удаления при окончании построения отчета
 
     Пять: */
@@ -125,15 +141,27 @@ void MainWindow::addThread()
 
     И наконец :
     */
-        connect(dataProcessor,SIGNAL(NumProcessedFiles(int)),this,SLOT(setProcessStatus(int)));
+        connect(m_DataProcessor,SIGNAL(NumProcessedFiles(int)),this,SLOT(setProcessStatus(int)));
 
         thread->start();
+
     /* Запускаем поток, он запускает RBWorker::process(), который создает ReportBuilder и запускает  построение отчета */
 
         return ;
 
 }
 
-void MainWindow::stopThreads(){emit stopAll();}
+void MainWindow::stopThreads(){
+    //emit stopAll();
+    m_DataProcessor->stop();
+}
+
+int MainWindow::GetNumOfRawFilesInDir(QString dir)
+{
+    QDir qDir(dir);
+    qDir.setNameFilters(QStringList()<<"*.dat");
+    QStringList fileList = qDir.entryList();
+    return fileList.length();
+}
 
 

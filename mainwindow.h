@@ -4,6 +4,9 @@
 #include <QMainWindow>
 #include <QMenu>
 #include <QLineEdit>
+#include <QPushButton>
+
+#include "qepigraphdataprocessor.h"
 
 
 namespace Ui {
@@ -25,10 +28,14 @@ private:
     QMenu *m_pAnalysTypeMnu;
     QLineEdit *m_lineEditRawDir;
     QLineEdit *m_lineEditProcDir;
+    QPushButton *m_btnProcess;
+    QEpigraphDataProcessor* m_DataProcessor;
+
     void CreateMenu();
 
     void addThread();
     void stopThreads();
+    int GetNumOfRawFilesInDir(QString);
 
 public slots:
 
