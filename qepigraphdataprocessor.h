@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QString>
 
+#include "../QEpigDataFourierAnalysisLib/cprocessrawepigraphdata.h"
+
 
 class QEpigraphDataProcessor : public QObject
 {
@@ -30,6 +32,7 @@ private:
     QString m_DirWithRawData;
     QString m_DirWithProcData;
     int m_NumOfProcessedFiles;
+    CProcessRawEpigraphData* m_DataProcessor;
 };
 
 #endif // QEPIGRAPHDATAPROCESSOR_H

@@ -24,9 +24,9 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-QEpigDataFourierAnalysisLib-Desktop_Qt_5_5_1_MinGW_32bit-Debug/release/ -lQEpigDataFourierAnalysisLib
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-QEpigDataFourierAnalysisLib-Desktop_Qt_5_5_1_MinGW_32bit-Debug/debug/ -lQEpigDataFourierAnalysisLib
-else:unix: LIBS += -L$$PWD/../build-QEpigDataFourierAnalysisLib-Desktop_Qt_5_5_1_MinGW_32bit-Debug/ -lQEpigDataFourierAnalysisLib
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-QEpigDataFourierAnalysisLib-Desktop-Debug/release/ -lQEpigDataFourierAnalysisLib
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-QEpigDataFourierAnalysisLib-Desktop-Debug/debug/ -lQEpigDataFourierAnalysisLib
+else:unix: LIBS += -L$$PWD/../build-QEpigDataFourierAnalysisLib-Desktop-Debug/ -lQEpigDataFourierAnalysisLib
 
 INCLUDEPATH += $$PWD/../QEpigDataFourierAnalysisLib
 DEPENDPATH += $$PWD/../QEpigDataFourierAnalysisLib
