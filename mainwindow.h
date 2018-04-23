@@ -45,6 +45,7 @@ private slots:
     void RevTofAnParamWnd();
     void Browse();
     void Browse_2();
+    void DataProcessingFinished();
     
     void on_pushButton_4_clicked();
     void on_pushButton_3_clicked();

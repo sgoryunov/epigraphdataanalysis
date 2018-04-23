@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qepigraphdataprocessor.h"
 
 #include <QThread>
 
@@ -141,6 +140,7 @@ void MainWindow::addThread()
 
     И наконец :
     */
+        connect(thread,SIGNAL(destroyed(QObject*)),this,SLOT(DataProcessingFinished()));
         connect(m_DataProcessor,SIGNAL(NumProcessedFiles(int)),this,SLOT(setProcessStatus(int)));
 
         thread->start();
@@ -164,4 +164,8 @@ int MainWindow::GetNumOfRawFilesInDir(QString dir)
     return fileList.length();
 }
 
+void MainWindow::DataProcessingFinished()
+{
+    m_btnProcess->setText("Process files");
+}
 

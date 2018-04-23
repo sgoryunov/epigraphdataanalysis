@@ -9,7 +9,7 @@ QEpigraphDataProcessor::QEpigraphDataProcessor( QString str1, QString str2)
     m_DirWithRawData = str1;
     m_DirWithProcData = str2;
     m_NumOfProcessedFiles = 0;
-    //m_DataProcessor = null;
+    m_DataProcessor = NULL;
 }
 
 void QEpigraphDataProcessor::ProcessedOneRawFile()
@@ -19,17 +19,20 @@ void QEpigraphDataProcessor::ProcessedOneRawFile()
 void QEpigraphDataProcessor::process()
 {
     m_DataProcessor = new CProcessRawEpigraphData(this);
-    connect(m_DataProcessor,SIGNAL(ProcessedFile()),this,SLOT(ProcessedOneRawFile()));
-    connect(this,SIGNAL(StopDataProcessor()),m_DataProcessor,SLOT(Stop()));
-    //start process files in directory
-    wchar_t buf[256] = {0};
-    wchar_t buf2[256] = {0};
-    m_DirWithRawData.toWCharArray(buf);
-    m_DirWithProcData.toWCharArray(buf2);
-    m_DataProcessor->SetDirectoryForProcessedFiles(buf2);
-    m_DataProcessor->ProcessDirectory(buf);
+    if(m_DataProcessor != NULL)
+    {
+        connect(m_DataProcessor,SIGNAL(ProcessedFile()),this,SLOT(ProcessedOneRawFile()));
+        connect(this,SIGNAL(StopDataProcessor()),m_DataProcessor,SLOT(Stop()));
+        //start process files in directory
+        wchar_t buf[256] = {0};
+        wchar_t buf2[256] = {0};
+        m_DirWithRawData.toWCharArray(buf);
+        m_DirWithProcData.toWCharArray(buf2);
+        m_DataProcessor->SetDirectoryForProcessedFiles(buf2);
+        m_DataProcessor->ProcessDirectory(buf);
 
-    m_DataProcessor->deleteLater();
+        m_DataProcessor->deleteLater();
+    }
 
     emit finished();
 
@@ -39,7 +42,7 @@ void QEpigraphDataProcessor::process()
 
 void QEpigraphDataProcessor::stop()
 {
-    m_DataProcessor->Stop();
+    if(m_DataProcessor != NULL)m_DataProcessor->Stop();
 }
 
 int QEpigraphDataProcessor::GetNumberOfRawFiles(QString str)
