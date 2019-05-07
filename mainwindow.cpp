@@ -54,7 +54,13 @@ void MainWindow::on_pushButton_4_clicked()
 // обработаем файлы по нажатию кнопки
 void MainWindow::on_pushButton_3_clicked()
 {
-    // запустим поток для обработки данных
+    // запустим поток для обработки данных, если есть сырые файлы в указанной директории
+    int maxFilesNum(0);
+    maxFilesNum = GetNumOfRawFilesInDir(m_lineEditRawDir->text());
+    if(maxFilesNum==0) return;
+    // подготовим контролы
+    ui->progressBar->setMaximum(maxFilesNum);
+    ui->listWidget->clear();
     if(m_btnProcess->text() != "Stop")
     {
        if(!m_lineEditRawDir->text().isEmpty())
@@ -106,13 +112,16 @@ void MainWindow::setProcessStatus(int num)
  return;
 }
 
+void MainWindow::setProcessedFileToLV(QString str)
+{
+ ui->listWidget->addItem(str);
+ return;
+}
 
 void MainWindow::addThread()
 {
-    ui->progressBar->setMaximum(
-                GetNumOfRawFilesInDir(m_lineEditRawDir->text()));
 
-    m_DataProcessor = new QEpigraphDataProcessor(m_lineEditRawDir->text(),m_lineEditProcDir->text());
+    m_DataProcessor = new QEpigraphDataProcessor(m_RawFileList,m_lineEditProcDir->text());
     QThread* thread = new QThread ;
     m_DataProcessor->moveToThread(thread);
 
@@ -141,8 +150,10 @@ void MainWindow::addThread()
     И наконец :
     */
         connect(thread,SIGNAL(destroyed(QObject*)),this,SLOT(DataProcessingFinished()));
+        // выведем колличество обработанных файлов в прогресс бар
         connect(m_DataProcessor,SIGNAL(NumProcessedFiles(int)),this,SLOT(setProcessStatus(int)));
-
+        // выведем имя обработттного файла в список
+        connect(m_DataProcessor,SIGNAL(ProcessedFileName(QString)),this,SLOT(setProcessedFileToLV(QString)));
         thread->start();
 
     /* Запускаем поток, он запускает RBWorker::process(), который создает ReportBuilder и запускает  построение отчета */
@@ -158,10 +169,15 @@ void MainWindow::stopThreads(){
 
 int MainWindow::GetNumOfRawFilesInDir(QString dir)
 {
-    QDir qDir(dir);
-    qDir.setNameFilters(QStringList()<<"*.dat");
-    QStringList fileList = qDir.entryList();
-    return fileList.length();
+    int num(0);
+    QStringList lst;
+    QDirIterator it(dir, QStringList() << "*.dat", QDir::Files, QDirIterator::Subdirectories);
+    while (it.hasNext()){
+        lst<<it.next();
+    }
+    m_RawFileList=lst;
+    qDebug()<<lst.length();
+    return lst.length();
 }
 
 void MainWindow::DataProcessingFinished()

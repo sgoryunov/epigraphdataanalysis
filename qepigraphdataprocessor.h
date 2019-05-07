@@ -12,7 +12,7 @@ class QEpigraphDataProcessor : public QObject
     Q_OBJECT
 public:
     explicit QEpigraphDataProcessor(QObject *parent);
-    QEpigraphDataProcessor( QString , QString);
+    QEpigraphDataProcessor( QStringList & , QString);// (list of raw files, processed dir path)
 
     void stop();    	/*  останавливает обработсика файлов */
     int GetNumberOfRawFiles(QString);
@@ -26,13 +26,14 @@ signals:
     void finished(); 	/* сигнал о завершении  работы обработчика файлов */
     void NumProcessedFiles(int);
     void StopDataProcessor();//
-
+    void ProcessedFileName(QString);
 
 private:
-    QString m_DirWithRawData;
     QString m_DirWithProcData;
     int m_NumOfProcessedFiles;
     CProcessRawEpigraphData* m_DataProcessor;
+    QStringList m_RawFileList;
+
 };
 
 #endif // QEPIGRAPHDATAPROCESSOR_H
