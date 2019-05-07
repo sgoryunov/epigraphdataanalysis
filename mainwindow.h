@@ -5,6 +5,7 @@
 #include <QMenu>
 #include <QLineEdit>
 #include <QPushButton>
+//#include <QListView>
 
 #include "qepigraphdataprocessor.h"
 
@@ -31,6 +32,9 @@ private:
     QPushButton *m_btnProcess;
     QEpigraphDataProcessor* m_DataProcessor;
 
+
+    QStringList m_RawFileList;
+
     void CreateMenu();
 
     void addThread();
@@ -51,7 +55,7 @@ private slots:
     void on_pushButton_3_clicked();
 
     void setProcessStatus(int);
-
+    void setProcessedFileToLV(QString);
 signals:
     void stopAll();
     

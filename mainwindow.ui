@@ -91,7 +91,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QListView" name="listView"/>
+         <widget class="QListWidget" name="listWidget"/>
         </item>
         <item>
          <widget class="QProgressBar" name="progressBar">
@@ -112,7 +112,7 @@
      <x>0</x>
      <y>0</y>
      <width>480</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>
