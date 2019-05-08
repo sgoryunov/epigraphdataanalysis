@@ -55,11 +55,6 @@ void QEpigraphDataProcessor::process()
               {
                  emit  ProcessedFileName(str + " --> BAD! Format error!");
               }
-              else
-              {
-                 emit  ProcessedFileName(str + " --> BAD! Format error!");
-
-              }
           }
          }
         emit  ProcessedFileName(QString("Processed %1 files from %2 !").arg(QString::number(i),QString::number(m_RawFileList.length())));
