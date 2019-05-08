@@ -10,6 +10,7 @@ QEpigraphDataProcessor::QEpigraphDataProcessor( QStringList& lst, QString str)
     m_DirWithProcData = str;
     m_NumOfProcessedFiles = 0;
     m_DataProcessor = NULL;
+    m_isStopProcess = false;
 }
 
 void QEpigraphDataProcessor::ProcessedOneRawFile()
@@ -26,17 +27,18 @@ void QEpigraphDataProcessor::process()
         //start process files in directory
         wchar_t buf[256] = {0};
         wchar_t buf2[256] = {0};
-       ;
         m_DirWithProcData.toWCharArray(buf2);
         m_DataProcessor->SetDirectoryForProcessedFiles(buf2);
         //m_DataProcessor->ProcessDirectory(buf);
         int error(0);
         int i(0);
-        foreach (const QString &str, m_RawFileList) {
+        foreach (QString str, m_RawFileList) {
+          if(m_isStopProcess) break;
+          wmemset (buf,L'\0',256);
           str.toWCharArray(buf);
+          //qDebug()<<QString::fromWCharArray(buf,256);
           m_DataProcessor->ProcessFile(buf);
           emit  NumProcessedFiles( ++m_NumOfProcessedFiles);
-
           if(!error)
           {
               i++;
@@ -58,7 +60,7 @@ void QEpigraphDataProcessor::process()
           }
          }
         emit  ProcessedFileName(QString("Processed %1 files from %2 !").arg(QString::number(i),QString::number(m_RawFileList.length())));
-
+        emit scrollDown();
         m_DataProcessor->deleteLater();
     }
 
@@ -71,6 +73,7 @@ void QEpigraphDataProcessor::process()
 void QEpigraphDataProcessor::stop()
 {
     if(m_DataProcessor != NULL)m_DataProcessor->Stop();
+    m_isStopProcess = true;
 }
 
 int QEpigraphDataProcessor::GetNumberOfRawFiles(QString str)

@@ -27,12 +27,14 @@ signals:
     void NumProcessedFiles(int);
     void StopDataProcessor();//
     void ProcessedFileName(QString);
+    void scrollDown();
 
 private:
     QString m_DirWithProcData;
     int m_NumOfProcessedFiles;
     CProcessRawEpigraphData* m_DataProcessor;
     QStringList m_RawFileList;
+    bool m_isStopProcess;
 
 };
 

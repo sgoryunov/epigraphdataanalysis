@@ -54,15 +54,15 @@ void MainWindow::on_pushButton_4_clicked()
 // обработаем файлы по нажатию кнопки
 void MainWindow::on_pushButton_3_clicked()
 {
-    // запустим поток для обработки данных, если есть сырые файлы в указанной директории
-    int maxFilesNum(0);
-    maxFilesNum = GetNumOfRawFilesInDir(m_lineEditRawDir->text());
-    if(maxFilesNum==0) return;
-    // подготовим контролы
-    ui->progressBar->setMaximum(maxFilesNum);
-    ui->listWidget->clear();
     if(m_btnProcess->text() != "Stop")
     {
+        // запустим поток для обработки данных, если есть сырые файлы в указанной директории
+        int maxFilesNum(0);
+        maxFilesNum = GetNumOfRawFilesInDir(m_lineEditRawDir->text());
+        if(maxFilesNum==0) return;
+        // подготовим контролы
+        ui->progressBar->setMaximum(maxFilesNum);
+        ui->listWidget->clear();
        if(!m_lineEditRawDir->text().isEmpty())
        {
            m_btnProcess->setText("Stop");
@@ -115,6 +115,7 @@ void MainWindow::setProcessStatus(int num)
 void MainWindow::setProcessedFileToLV(QString str)
 {
  ui->listWidget->addItem(str);
+ //ui->listWidget->scrollToBottom();
  return;
 }
 
@@ -154,6 +155,8 @@ void MainWindow::addThread()
         connect(m_DataProcessor,SIGNAL(NumProcessedFiles(int)),this,SLOT(setProcessStatus(int)));
         // выведем имя обработттного файла в список
         connect(m_DataProcessor,SIGNAL(ProcessedFileName(QString)),this,SLOT(setProcessedFileToLV(QString)));
+        // будем опускаться вниз списка файлов по сигналу
+        connect(m_DataProcessor,SIGNAL(scrollDown()),ui->listWidget,SLOT(scrollToBottom()));
         thread->start();
 
     /* Запускаем поток, он запускает RBWorker::process(), который создает ReportBuilder и запускает  построение отчета */
