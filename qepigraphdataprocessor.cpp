@@ -41,17 +41,24 @@ void QEpigraphDataProcessor::process()
           {
               i++;
               emit  ProcessedFileName(str+" -->OK!");
+
           }
           else
           {
               if(error == 46)
               {
                   i++;
+
                   emit  ProcessedFileName(str + " --> No pulse in DET channel");
               }
               else
               {
                  emit  ProcessedFileName(str + " --> BAD! Format error!");
+              }
+              else
+              {
+                 emit  ProcessedFileName(str + " --> BAD! Format error!");
+
               }
           }
          }
